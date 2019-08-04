@@ -40,9 +40,12 @@ namespace Altairis.Services.UrlSigner {
             // Get expiration timestamp
             var unsignedUrl = url.RemoveLastParameter("sig", out var _);
             unsignedUrl.RemoveLastParameter("exp", out var expString);
+            
+            // Expecting number of seconds
+            if (!double.TryParse(expString, out var expSeconds)) return false;
 
             // Compare with current time
-            var expTime = ZeroTime.AddSeconds(double.Parse(expString));
+            var expTime = ZeroTime.AddSeconds(expSeconds);
             return expTime >= DateTime.UtcNow;
         }
 
